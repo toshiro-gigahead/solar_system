@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Explorer | 3-Page Space Hub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-deep: #07020d;
+            --purple-dark: #16082b;
+            --purple-main: #5e17eb;
+            --purple-light: #9d4edd;
+            --purple-glow: #c8b6ff;
+            --text-main: #ffffff;
+            --text-muted: #a795c4;
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -2;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 150px 70px, #e0e0e0, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 90px 40px, var(--purple-glow), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 230px 180px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 350px 250px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 400px 90px, var(--purple-light), rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 500px 500px;
+            animation: drift 120s linear infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(94, 23, 235, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(157, 78, 221, 0.15), transparent 50%);
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            from { background-position: 0 0; }
+            to { background-position: -500px 500px; }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0; width: 100%;
+            height: var(--nav-height);
+            background: rgba(22, 8, 43, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, var(--purple-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links label {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.3s, border-bottom 0.3s;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            user-select: none;
+        }
+
+        .nav-links label:hover {
+            color: var(--purple-glow);
+        }
+
+        .page {
+            display: none; /* Hidden by default */
+            padding-top: calc(var(--nav-height) + 3rem);
+            padding-bottom: 4rem;
+            min-height: 100vh;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* State routing based on hidden radio inputs */
+        #nav-home:checked ~ .navbar .label-home,
+        #nav-planets:checked ~ .navbar .label-planets,
+        #nav-missions:checked ~ .navbar .label-missions {
+            color: var(--text-main);
+            border-bottom: 2px solid var(--purple-light);
+        }
+
+        #nav-home:checked ~ .content #page-home,
+        #nav-planets:checked ~ .content #page-planets,
+        #nav-missions:checked ~ .content #page-missions {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1.page-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        p.page-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 4rem;
+            line-height: 1.6;
+        }
+
+        /* Home Page Specifics */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(80vh - var(--nav-height));
+            text-align: center;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--purple-main);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 4px 15px rgba(94, 23, 235, 0.4);
+        }
+
+        .cta-btn:hover {
+            background: var(--purple-light);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6);
+        }
+
+        .css-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: rgba(22, 8, 43, 0.6);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--purple-light);
+            box-shadow: 0 10px 30px rgba(94, 23, 235, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+
+        .planet-orb {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            position: relative;
+            box-shadow: inset -15px -15px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.05);
+        }
+
+        .earth { background: radial-gradient(circle at 35% 35%, #4ade80, #3b82f6 40%, #1e3a8a 85%); }
+        .mars { background: radial-gradient(circle at 30% 30%, #fb923c, #dc2626 55%, #7f1d1d 90%); }
+        .jupiter {
+            background: repeating-linear-gradient(
+                0deg, #92400e 0%, #d97706 15%, #fef3c7 20%, #92400e 35%
+            );
+            background-size: 100% 200%;
+        }
+        
+        .saturn {
+            background: radial-gradient(circle at 40% 40%, #fde68a, #d97706 70%);
+            /* Saturn's Ring */
+            transform-style: preserve-3d;
+        }
+        .saturn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 220px; height: 60px;
+            border: 15px solid rgba(253, 230, 138, 0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            box-shadow: 0 0 10px rgba(253, 230, 138, 0.2), inset 0 0 10px rgba(253, 230, 138, 0.2);
+        }
+
+        /* Mission Images (Using gradients as placeholders) */
+        .mission-img {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--purple-dark), var(--purple-main));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mission-img::after {
+            content: '🚀';
+            font-size: 4rem;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.5;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .navbar { padding: 0 1rem; }
+            .logo { font-size: 1.2rem; }
+            .nav-links { gap: 1rem; font-size: 0.9rem; }
+            .planet-orb { width: 110px; height: 110px; }
+            .saturn::before { width: 170px; height: 45px; border-width: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- The Engine of the CSS SPA -->
+    <input type="radio" id="nav-home" name="router" checked hidden>
+    <input type="radio" id="nav-planets" name="router" hidden>
+    <input type="radio" id="nav-missions" name="router" hidden>
+
+    <nav class="navbar">
+        <div class="logo">Cosmic Explorer</div>
+        <div class="nav-links">
+            <label for="nav-home" class="label-home">Home</label>
+            <label for="nav-planets" class="label-planets">Planets</label>
+            <label for="nav-missions" class="label-missions">Missions</label>
+        </div>
+    </nav>
+
+    <main class="content">
+
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="page container">
+            <div class="hero">
+                <h1 class="page-title">Discover the<br>Unknown</h1>
+                <p class="page-subtitle">Journey through the stars and interstellar space. Explore the planetary wonders of our solar system and the legendary missions that took us there.</p>
+                <!-- Clicking this label triggers the 'Planets' radio button! -->
+                <label for="nav-planets" class="cta-btn">Start Exploring</label>
+            </div>
+        </section>
+
+        <!-- PAGE 2: PLANETS -->
+        <section id="page-planets" class="page container">
+            <h1 class="page-title">The Planets</h1>
+            <p class="page-subtitle">A responsive CSS Grid showcasing celestial bodies built entirely with CSS gradients and shadows.</p>
+            
+            <div class="css-grid">
+                <div class="card">
+                    <div class="planet-orb earth"></div>
+                    <h2>Earth</h2>
+                    <p>Our home planet, a terrestrial world covered heavily in liquid oceans, capable of sustaining a vast diversity of life.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="planet-orb mars"></div>
+                    <h2>Mars</h2>
+                    <p>The Red Planet. A dusty, cold, desert world with a very thin atmosphere, yet it holds the potential for past life.</p>
+                </div>
+
+                <div class="card">
+                    <div class="planet-orb jupiter"></div>
+                    <h2>Jupiter</h2>
+                    <p>The largest planet in our solar system, a gas giant known for its iconic Great Red Spot and turbulent atmosphere.</p>
+                </div>
+
+                <div class="card">
+                    <div class="planet-orb saturn"></div>
+                    <h2>Saturn</h2>
+                    <p>The jewel of the solar system, famous for its intricate and beautiful ring system made of ice and rock.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: MISSIONS -->
+        <section id="page-missions" class="page container">
+            <h1 class="page-title">Epic Missions</h1>
+            <p class="page-subtitle">Humanity's greatest achievements in space exploration.</p>
+            
+            <div class="css-grid">
+                <div class="card">
+                    <div class="mission-img"></div>
+                    <h2>Apollo 11</h2>
+                    <p>The legendary 1969 mission that successfully landed the first humans, Neil Armstrong and Buzz Aldrin, on the Moon.</p>
+                </div>
+
+                <div class="card">
+                    <div class="mission-img"></div>
+                    <h2>Voyager 1</h2>
+                    <p>Launched in 1977, this probe has crossed into interstellar space, carrying the Golden Record of Earth's culture.</p>
+                </div>
+
+                <div class="card">
+                    <div class="mission-img"></div>
+                    <h2>James Webb</h2>
+                    <p>The most powerful space telescope ever built, gazing back to the dawn of the universe with infrared technology.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
